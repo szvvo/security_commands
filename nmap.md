@@ -36,7 +36,7 @@ nmap scan phases
 - Traceroute
 - Scripts
 
-
+### Host Discovery
 ```bash
 # nmap commands
 
@@ -79,3 +79,61 @@ nmap -PU<PORT> -sn TARGET
 # --dns-servers DNS_SERVER
 
 ```
+
+
+### Basic Port Scans
+
+![[Pasted image 20241107210243.png]]
+
+### Flags
+- URG
+- ACK: 
+- PSH: Push data to the application 
+- RST: Reset connection, tear a TCP connection
+- SYN: Initiate a TCP 3-Way Handshake and synchorize sequence numbers
+- FIN: Sender has no more data to send
+
+At the most simplistic way, we can classify ports in two states:
+- Open ports (No service is running)
+- Closed ports (Port is accesible)
+- Filtered: Cannot determine if the port is either open/closed (it usually means that a firewall is blocking either by blocking the port or blocking the host)
+- Ulfiltered : Cannot determine if the port is open or closed, although the port is accesible - Encountered when using ACK `nmap-sA`
+- Open|Filtered: Port Either open or filtered
+- Closed|Filtered: Port Either closed or filtered 
+Considering firewalls in place:
+
+### TCP SYN Scan
+![[Pasted image 20241107211652.png]]
+
+```bash
+### TCP connect port scan
+# initiates a 3-way handshake and sends a RST/ACK PACKET
+nmap -sT -F TARGET
+-- A closed port will response to a SYN with a RST/ACK packet
+
+
+### TCP SYN port scan 
+# tears down connection once it receives a SYN/ACK packet
+nmap -sS
+
+
+### UDP port scan
+# since udp is connectionless it will be listening for any ICMP type 3 destination unreachable packet and will consider open ports to those that does not receive a type 3
+nmap -sU TARGET
+
+
+### Setting up scan speed 
+- paranoid (0)
+- sneaky (1)
+- polite (2)
+- normal (3)
+- aggressive (4)
+- insane (5)
+# `-T0` scans one port at a time and waits 5 minutes between sending each probe,
+# -T3 by default
+# --max-rate=10 - no more than 10 packets p/s
+# control probing parallelization using `--min-parallelism <numprobes>`
+nmap -sS -p- -T5 -v
+
+```
+
